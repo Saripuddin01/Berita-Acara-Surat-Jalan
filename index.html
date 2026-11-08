@@ -5,136 +5,117 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#1d2330;--mu:#667085;--bd:#d9dde5;--ac:#1f7a4d;--ac2:#e6f4ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171c;--card:#1d2229;--tx:#e8ebf0;--mu:#98a2b3;--bd:#323944;--ac:#3fb67d;--ac2:#1d3328}}
+:root{--bg:#f3f6f4;--card:#fff;--tx:#18241e;--mu:#62736a;--bd:#dde6e0;--ac:#1c8c56;--ac2:#e5f5ec;--hd1:#12633d;--hd2:#2aa874;--sh:0 4px 18px rgba(20,60,40,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1512;--card:#18211c;--tx:#e6efe9;--mu:#92a69b;--bd:#2b3a32;--ac:#3fbf84;--ac2:#1b3328;--hd1:#0e4a2e;--hd2:#1d7d52;--sh:0 4px 18px rgba(0,0,0,.35)}}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-.w{max-width:1000px;margin:0 auto;padding:16px}
-h1{font-size:20px;margin:0 0 2px}.sub{color:var(--mu);margin:0 0 14px;font-size:13px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px}
-h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em;color:var(--mu)}
-.tabs{display:flex;gap:8px;margin-bottom:14px}
-.tabs button{flex:1;padding:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
-.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-label{display:block;font-size:12px;color:var(--mu)}
-input[type=text],input[type=date],input[type=time],input[type=number],textarea{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-.btn{padding:8px 14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;font:inherit;cursor:pointer}
-.btn.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-.tw{overflow-x:auto}table.t{width:100%;border-collapse:collapse;min-width:640px}
-.t th,.t td{padding:4px 6px;border-bottom:1px solid var(--bd);text-align:left;font-size:13px}.t th{color:var(--mu);font-weight:600}
-.t input[type=text],.t input[type=number]{padding:5px 7px}
-.t.terima .k{display:none}.t.kembali .m{display:none}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+.hero{background:linear-gradient(135deg,var(--hd1),var(--hd2));color:#fff;padding:26px 16px 62px}
+.hero .in,.w{max-width:880px;margin:0 auto}
+.hero h1{margin:0 0 4px;font-size:24px;letter-spacing:-.01em}.hero p{margin:0;opacity:.88;font-size:14px}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border-radius:99px;padding:3px 12px;font-size:12px;margin-bottom:10px}
+.w{padding:0 14px;margin-top:-44px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.st{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px}
+.st b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;font-size:13px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg button{padding:14px 10px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:14px;font:inherit;font-weight:600;cursor:pointer;text-align:left;transition:.15s}
+.seg button small{display:block;font-weight:400;color:var(--mu);font-size:12px}
+.seg button.on{border-color:var(--ac);background:var(--ac2)}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label.f{display:block;font-size:12px;color:var(--mu);font-weight:600}
+input[type=text],input[type=date],input[type=time],input[type=number]{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+input:focus{outline:2px solid var(--ac);outline-offset:0}
+.chk{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px}
 .hint{font-size:12px;color:var(--mu)}
-#pr{display:none}
-.sheet{width:210mm;height:297mm;padding:6mm 10mm;page-break-after:always;color:#000;background:#fff;font:11pt/1.35 "Times New Roman",serif}
-.ba{height:140mm;border-bottom:1px dashed #888;padding:3mm 0;overflow:hidden}
-.ba:last-child{border-bottom:0}
-.hd{width:100%;border-collapse:collapse;border:1.5px solid #000;margin-bottom:6px}
-.hd td{padding:4px 8px;vertical-align:middle}.hd .lg{width:22mm;text-align:center;border-right:1.5px solid #000}
-.hd img{max-width:18mm;max-height:18mm}.hd .tt{text-align:center;font-weight:700;font-size:12pt}
-.no{margin:4px 0 6px;font-weight:700}
-.bl{display:inline-block;min-width:22mm;border-bottom:1px solid #000;height:1em}
-.sg{width:100%;border-collapse:collapse;margin-top:8px}.sg td{vertical-align:top;width:50%;padding:2px 6px}
-.ttd{height:14mm}.ctr{text-align:center}
-.cat{margin-top:8px;font-size:10pt;font-weight:700}
-@media print{@page{size:A4;margin:0}body{background:#fff}.w{display:none}#pr{display:block}}
+.btn{padding:8px 13px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;font-size:13px;cursor:pointer}
+.btn:hover{border-color:var(--ac)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{background:var(--ac2);color:var(--ac);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
+ul#list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:7px}
+#list li{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;transition:.12s}
+#list li.off{opacity:.5}#list li.drg{opacity:.35}#list li.ov{border-color:var(--ac);box-shadow:0 -3px 0 var(--ac)}
+.gr{cursor:grab;color:var(--mu);font-size:18px;line-height:1;padding:2px 4px;touch-action:none;user-select:none}
+#list input[type=checkbox]{width:18px;height:18px;accent-color:var(--ac)}
+.no{min-width:24px;text-align:center;font-weight:700;color:var(--ac);font-size:13px}
+.nm{flex:1;font-weight:600;font-size:14px;word-break:break-word}
+.ac button{width:30px;height:30px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;cursor:pointer;margin-left:3px}
+.ac button:hover{border-color:var(--ac);color:var(--ac)}
+.bar{position:sticky;bottom:0;z-index:5;margin:0 -14px;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--bd);box-shadow:0 -6px 20px rgba(0,0,0,.07)}
+.bar .in{max-width:880px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.go{background:linear-gradient(135deg,var(--hd1),var(--hd2));color:#fff;border:0;border-radius:12px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer;font-size:15px;box-shadow:0 4px 14px rgba(28,140,86,.35)}
+.go:disabled{opacity:.5;cursor:default}
 </style></head><body>
+<div class="hero"><div class="in"><span class="badge">Program Makan Bergizi Gratis</span>
+<h1>Berita Acara Otomatis</h1><p>SPPG Kota Makassar Mannuruki Tamalate 3 · pilih sekolah, atur urutan, simpan sebagai Word</p></div></div>
 <div class="w">
-<h1>Berita Acara – Program Makan Bergizi Gratis</h1>
-<p class="sub">SPPG Kota Makassar Mannuruki Tamalate 3 · pilih sekolah, isi jumlah, lalu cetak sekaligus (merge)</p>
-<div class="tabs"><button id="b1" class="on">Penerimaan Paket</button><button id="b2">Pengembalian Ompreng</button></div>
+<div class="card"><h2 class="st"><b>1</b>Jenis dokumen</h2><div class="seg">
+<button id="m1" class="on">Penerimaan Paket<small>Berita acara paket makanan</small></button>
+<button id="m2">Pengembalian Ompreng<small>Berita acara alat makan</small></button></div></div>
 
-<div class="card"><h2>Pengaturan dokumen</h2><div class="g">
-<div><label>Tanggal</label><input type="date" id="tgl"></div>
-<div><label>Jam (kosongkan jika diisi tulis tangan)</label><input type="time" id="jam"></div>
-<div><label>Nomor urut awal</label><input type="number" id="no" min="1" value="1"></div>
-<div><label>Yang menyerahkan / menerima (SPPG)</label><input type="text" id="py" value="Saripuddin"></div>
-<div><label>Nomor telepon</label><input type="text" id="pt" value="081245882684"></div>
-<div><label>Kepala SPPG (mengetahui)</label><input type="text" id="kp" value="Ashad Ian Muhyi Ardiansyah Syam"></div>
-</div>
-<div class="row"><label><input type="checkbox" id="inc" checked> Nomor naik per sekolah</label>
-<label><input type="checkbox" id="rg" checked> 2 rangkap (cetak cepat)</label>
-<label>Logo cetak cepat: <input type="file" id="lgf" accept="image/*"></label></div>
+<div class="card"><h2 class="st"><b>2</b>Pengaturan</h2><div class="g">
+<label class="f">Tanggal<input type="date" id="tgl"></label>
+<label class="f">Jam (kosongkan jika ditulis tangan)<input type="time" id="jam"></label>
+<label class="f">Nomor surat pertama<input type="number" id="no" min="1" value="1"></label>
+<label class="f">Yang menyerahkan / menerima<input type="text" id="py" value="Saripuddin"></label>
+<label class="f">Nomor telepon<input type="text" id="pt" value="081245882684"></label>
+<label class="f">Kepala SPPG<input type="text" id="kp" value="Ashad Ian Muhyi Ardiansyah Syam"></label></div>
+<label class="chk"><input type="checkbox" id="inc" checked> Nomor naik satu per sekolah</label>
 <div class="hint" id="nopv" style="margin-top:6px"></div></div>
 
-<div class="card"><h2>Data sekolah (merge)</h2>
-<div class="row" style="margin-top:0"><input type="file" id="xf" accept=".xlsx,.xls,.csv" style="max-width:260px">
-<label><input type="checkbox" id="skip" checked> Baris pertama = judul kolom</label>
-<button class="btn" id="all">Pilih semua</button><button class="btn" id="none">Kosongkan</button><button class="btn" id="rs">Reset ke daftar awal</button></div>
-<div class="hint" style="margin:6px 0">Unggah Excel/CSV dengan nama sekolah di kolom A. Tabel di bawah bisa diisi per sekolah; yang dikosongkan akan jadi garis isi tulis tangan.</div>
-<div class="tw"><table class="t terima" id="tb"><thead><tr><th></th><th>Sekolah</th>
-<th class="m">Jumlah paket</th><th class="k">Ompreng diterima</th><th class="k">Dikembalikan</th><th class="k">Rusak/hilang</th>
-<th>Nama penerima</th><th>Jabatan</th><th>Telepon</th></tr></thead><tbody></tbody></table></div>
-<div class="row"><input type="text" id="add" placeholder="Tambah sekolah…" style="max-width:260px"><button class="btn" id="addb">Tambah</button></div></div>
-
-<div class="row"><button class="btn p" id="go">Cetak cepat (perkiraan)</button><button class="btn p" id="wd">Simpan Word (.docx) – format asli</button><span class="hint" id="cnt"></span></div>
-<div class="hint" style="margin-top:8px">File Word memakai template asli Anda (logo, garis, kotak, 2 rangkap per halaman) dan hasilnya sama persis. Untuk PDF, buka file Word lalu Save as PDF. Tombol cetak cepat hanya perkiraan tampilan.</div>
+<div class="card"><h2 class="st"><b>3</b>Daftar sekolah <span class="pill" id="cnt"></span></h2>
+<div class="row"><label class="btn">Impor Excel/CSV<input type="file" id="xf" accept=".xlsx,.xls,.csv" hidden></label>
+<button class="btn" id="all">Pilih semua</button><button class="btn" id="none">Kosongkan</button><button class="btn" id="az">Urut A–Z</button><button class="btn" id="rs">Reset</button></div>
+<label class="chk" style="margin-top:8px"><input type="checkbox" id="skip" checked> Baris pertama file Excel adalah judul kolom</label>
+<div class="hint" style="margin-top:6px">Seret ⠿ atau pakai tombol ▲▼ untuk mengatur urutan. Urutan di sini menjadi urutan halaman dan nomor surat. Jumlah paket, ompreng, dan data penerima dibiarkan kosong untuk diisi pihak sekolah.</div>
+<ul id="list"></ul>
+<div class="row" style="margin-top:12px"><input type="text" id="add" placeholder="Tambah sekolah baru…" style="max-width:300px;margin:0"><button class="btn" id="addb">Tambah</button></div></div>
 </div>
-<div id="pr"></div>
+<div class="bar"><div class="in"><div><b id="sum"></b><div class="hint" id="sum2"></div></div><button class="go" id="wd">Simpan Word (.docx)</button></div></div>
 <script>
 const $=s=>document.querySelector(s),RM=['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 const HR=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],BL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const DEF=["TK NEGERI TAMALATE","ASKOKA 5","TK ABA CAB.PARANG TAMBUNG","SDIT REZKY SYAFAAT","PAUD REZKY SYAFAAT","TK ISLAM MANDIRI","TK SATRIADI","SMP NEGERI 18 MAKASSAR","RA UMMU HABIBAH","ASKOKA 2","ASKOKA 3","MTS RADHIATUL ADAWIYAH PETTARANI","ASKOKA 7","SMP NEGERI 26 MAKASSAR"];
-const mk=n=>({n,on:true,q:'',a:'',b:'',c:'',nm:'',jb:'',tl:''});
 const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-let S=ld('ba_s',null)||DEF.map(mk),mode='terima',logo=ld('ba_logo2',null)||{u:'',w:1,h:1};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S=(ld('ba_s',null)||DEF).map(x=>typeof x=='string'?{n:x,on:true}:{n:x.n,on:x.on!==false}),mode=ld('ba_mode','terima'),drag=-1;
+const save2=()=>sv('ba_s',S);
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const getD=()=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec($('#tgl').value);return m?new Date(+m[1],m[2]-1,+m[3]):new Date()};
 $('#tgl').value=ymd(new Date());
-function draw(){
- $('#tb').className='t '+(mode=='terima'?'terima':'kembali');
- $('#tb tbody').innerHTML=S.map((s,i)=>`<tr><td><input type="checkbox" data-i="${i}" data-f="on" ${s.on?'checked':''}></td><td>${esc(s.n)}</td>
- <td class="m"><input type="number" min="0" data-i="${i}" data-f="q" value="${esc(s.q)}" style="width:80px"></td>
- ${['a','b','c'].map(f=>`<td class="k"><input type="number" min="0" data-i="${i}" data-f="${f}" value="${esc(s[f])}" style="width:80px"></td>`).join('')}
- <td><input type="text" data-i="${i}" data-f="nm" value="${esc(s.nm)}"></td><td><input type="text" data-i="${i}" data-f="jb" value="${esc(s.jb)}"></td><td><input type="text" data-i="${i}" data-f="tl" value="${esc(s.tl)}"></td></tr>`).join('');
- info()}
-function info(){const n=S.filter(s=>s.on).length;$('#cnt').textContent=n+' sekolah dipilih';
- const d=getD(),no=+$('#no').value||1;
- $('#nopv').textContent='Contoh nomor: '+nomor(no,d)}
+const CF=['jam','no','py','pt','kp'],cfg=ld('ba_cfg',{});CF.forEach(k=>{if(cfg[k]!=null)$('#'+k).value=cfg[k]});if(cfg.inc!=null)$('#inc').checked=cfg.inc;
 const nomor=(n,d)=>String(n).padStart(3,'0')+'/BAST/'+RM[d.getMonth()+1]+'/'+d.getFullYear();
-$('#tb').addEventListener('input',e=>{const t=e.target,i=t.dataset.i;if(i==null)return;S[i][t.dataset.f]=t.type=='checkbox'?t.checked:t.value;sv('ba_s',S);info()});
-['tgl','no'].forEach(id=>$('#'+id).addEventListener('input',info));
-$('#b1').onclick=()=>{mode='terima';$('#b1').classList.add('on');$('#b2').classList.remove('on');draw()};
-$('#b2').onclick=()=>{mode='kembali';$('#b2').classList.add('on');$('#b1').classList.remove('on');draw()};
-$('#all').onclick=()=>{S.forEach(s=>s.on=true);sv('ba_s',S);draw()};
-$('#none').onclick=()=>{S.forEach(s=>s.on=false);sv('ba_s',S);draw()};
-$('#rs').onclick=()=>{if(confirm('Kembalikan daftar sekolah ke awal?')){S=DEF.map(mk);sv('ba_s',S);draw()}};
-$('#addb').onclick=()=>{const v=$('#add').value.trim();if(v){S.push(mk(v.toUpperCase()));$('#add').value='';sv('ba_s',S);draw()}};
+function info(){const c=S.filter(s=>s.on).length,d=getD(),n=+$('#no').value||1;
+ $('#cnt').textContent=c+' dipilih';$('#sum').textContent=c+' sekolah · '+(mode=='terima'?'Penerimaan':'Pengembalian');
+ $('#wd').disabled=!c;
+ $('#nopv').textContent=c?'Nomor: '+nomor(n,d)+(c>1&&$('#inc').checked?' s/d '+nomor(n+c-1,d):''):'Belum ada sekolah dipilih';
+ $('#sum2').textContent=HR[d.getDay()]+', '+d.getDate()+' '+BL[d.getMonth()]+' '+d.getFullYear();
+ sv('ba_cfg',{jam:$('#jam').value,no:$('#no').value,py:$('#py').value,pt:$('#pt').value,kp:$('#kp').value,inc:$('#inc').checked})}
+function draw(){
+ $('#m1').classList.toggle('on',mode=='terima');$('#m2').classList.toggle('on',mode!='terima');
+ $('#list').innerHTML=S.map((s,i)=>`<li draggable="true" data-i="${i}" class="${s.on?'':'off'}"><span class="gr" title="Seret untuk memindah">⠿</span><input type="checkbox" data-a="on" ${s.on?'checked':''}><span class="no">${i+1}</span><span class="nm">${esc(s.n)}</span><span class="ac"><button data-a="up" title="Naik">▲</button><button data-a="dn" title="Turun">▼</button><button data-a="del" title="Hapus">✕</button></span></li>`).join('');info()}
+const mv=(f,t)=>{if(t<0||t>=S.length||f===t)return;S.splice(t,0,S.splice(f,1)[0]);save2();draw()};
+const L=$('#list');
+L.addEventListener('click',e=>{const li=e.target.closest('li'),a=e.target.dataset.a;if(!li||!a)return;const i=+li.dataset.i;
+ if(a=='on'){S[i].on=e.target.checked;save2();li.classList.toggle('off',!S[i].on);info()}
+ else if(a=='up')mv(i,i-1);else if(a=='dn')mv(i,i+1);else if(a=='del'&&confirm('Hapus '+S[i].n+' dari daftar?')){S.splice(i,1);save2();draw()}});
+L.addEventListener('dragstart',e=>{const li=e.target.closest('li');if(!li)return;drag=+li.dataset.i;li.classList.add('drg');try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(drag))}catch(x){}});
+L.addEventListener('dragover',e=>{const li=e.target.closest('li');if(!li||drag<0)return;e.preventDefault();L.querySelectorAll('.ov').forEach(x=>x.classList.remove('ov'));li.classList.add('ov')});
+L.addEventListener('drop',e=>{const li=e.target.closest('li');if(!li||drag<0)return;e.preventDefault();mv(drag,+li.dataset.i);drag=-1});
+L.addEventListener('dragend',()=>{drag=-1;draw()});
+['tgl','jam','no','py','pt','kp','inc'].forEach(id=>$('#'+id).addEventListener('input',info));
+$('#m1').onclick=()=>{mode='terima';sv('ba_mode',mode);draw()};$('#m2').onclick=()=>{mode='kembali';sv('ba_mode',mode);draw()};
+$('#all').onclick=()=>{S.forEach(s=>s.on=true);save2();draw()};$('#none').onclick=()=>{S.forEach(s=>s.on=false);save2();draw()};
+$('#az').onclick=()=>{S.sort((a,b)=>a.n.localeCompare(b.n,'id'));save2();draw()};
+$('#rs').onclick=()=>{if(confirm('Kembalikan daftar sekolah ke awal?')){S=DEF.map(n=>({n,on:true}));save2();draw()}};
+const addS=()=>{const v=$('#add').value.trim();if(v){S.push({n:v.toUpperCase(),on:true});$('#add').value='';save2();draw()}};
+$('#addb').onclick=addS;$('#add').addEventListener('keydown',e=>{if(e.key=='Enter')addS()});
 $('#xf').onchange=e=>{const f=e.target.files[0];if(!f)return;
  if(typeof XLSX=='undefined'){alert('Pustaka Excel gagal dimuat. Coba muat ulang halaman.');return}
  const r=new FileReader();r.onload=()=>{try{const wb=XLSX.read(r.result,{type:'array'}),rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});
-  let names=rows.map(x=>String(x[0]??'').trim()).filter(Boolean);if($('#skip').checked)names=names.slice(1);
+  let names=rows.map(x=>String(x[0]==null?'':x[0]).trim()).filter(Boolean);if($('#skip').checked)names=names.slice(1);
   names=[...new Set(names)];if(!names.length){alert('Tidak ada nama sekolah di kolom A.');return}
-  S=names.map(mk);sv('ba_s',S);draw()}catch(err){alert('File tidak bisa dibaca.')}};r.readAsArrayBuffer(f)};
-$('#lgf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{logo={u:r.result,w:im.naturalWidth||1,h:im.naturalHeight||1};sv('ba_logo2',logo)};im.src=r.result};r.readAsDataURL(f)};
-const bl=v=>v!==''&&v!=null?'<b>'+esc(v)+'</b>':'<span class="bl"></span>';
-function doc(s,no,d){
- const hari=HR[d.getDay()],tg=String(d.getDate()).padStart(2,'0')+' '+BL[d.getMonth()]+' '+d.getFullYear(),jam=$('#jam').value;
- const jm=jam?jam.replace(':',' : '):'___ : ___',py=$('#py').value,pt=$('#pt').value,kp=$('#kp').value;
- const T=mode=='terima'?'PENERIMAAN PAKET MAKANAN':'PENGEMBALIAN ALAT MAKAN (OMPRENG)';
- const head=`<table class="hd"><tr><td class="lg">${logo.u?`<img src="${logo.u}">`:''}</td><td class="tt">BERITA ACARA ${T}<br>PROGRAM MAKAN BERGIZI GRATIS</td></tr></table><div class="no">${no}</div>`;
- const kenal=`<div class="ctr" style="margin-top:8px">Mengetahui:<div class="ttd"></div><b><u>${esc(kp)}</u></b><br>Kepala SPPG, Mannuruki Tamalate 3</div>`;
- const rec=`<td>Nama : ${bl(s.nm)}<br>Jabatan : ${bl(s.jb)}<br>Asal Sekolah : <b>${esc(s.n)}</b><br>Nomor Telepon : ${bl(s.tl)}</td>`;
- if(mode=='terima')return `<div class="ba">${head}
- <p>Pada Hari <b>${hari}</b> Tanggal <b>${tg}</b> jam ${esc(jm)} telah diterima paket makanan sejumlah : ${bl(s.q)} Paket Makanan Bergizi dari Satuan Pelayanan Pemenuhan Gizi (SPPG) Kota Makassar Mannuruki Tamalate 3.</p>
- <table class="sg"><tr><td>Yang menyerahkan : <b>${esc(py)}</b><br>Nomor Telepon : ${esc(pt)}<div class="ttd"></div></td><td>Diterima oleh :</td></tr>
- <tr><td>${kenal}</td>${rec}</tr></table>
- <div class="cat">Catatan :<br>Khusus Menu Siap Santap<br>- Batas waktu layak konsumsi makanan adalah terhitung 2 jam setelah makanan tiba di sekolah/tempat<br>- Makanan tidak boleh dibawa pulang ke rumah</div></div>`;
- return `<div class="ba">${head}
- <p>Pada Hari <b>${hari}</b> Tanggal <b>${tg}</b> jam ${esc(jm)} telah dilakukan Pengembalian alat makan (ompreng) dari SPPG Kota Makassar Mannuruki Tamalate 3 dengan rincian sebagai berikut :</p>
- <p style="margin-left:8mm">• Jumlah ompreng yang diterima : ${bl(s.a)}<br>• Jumlah ompreng yang dikembalikan : ${bl(s.b)}<br>• Jumlah ompreng yang rusak/hilang : ${bl(s.c)}</p>
- <table class="sg"><tr>${rec}<td>Yang Menerima : <b>${esc(py)}</b><br>Nomor Telepon : ${esc(pt)}</td></tr>
- <tr><td class="ttd"></td><td></td></tr><tr><td></td><td>${kenal}</td></tr></table></div>`}
-$('#go').onclick=()=>{
- const L=S.filter(s=>s.on);if(!L.length){alert('Pilih minimal satu sekolah.');return}
- const d=getD();let n=+$('#no').value||1,h='';const two=$('#rg').checked;
- L.forEach(s=>{const no=nomor(n,d);if($('#inc').checked)n++;const x=doc(s,no,d);h+=`<div class="sheet">${x}${two?x:''}</div>`});
- $('#pr').innerHTML=h;setTimeout(()=>window.print(),150)};
-/* ===== Ekspor Word (.docx) ===== */
+  S=names.map(n=>({n,on:true}));save2();draw()}catch(err){alert('File tidak bisa dibaca.')}};r.readAsArrayBuffer(f);e.target.value=''};
 async function save(blob,name){
  try{if(window.claude){const dl=await claude.use('downloads');if(dl){await dl.save({filename:name,data:blob});return}}}catch(e){if(e&&e.code==='declined')return}
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
