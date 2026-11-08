@@ -24,7 +24,9 @@ body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",syst
 .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 label.f{display:block;font-size:12px;color:var(--mu);font-weight:600}
 input[type=text],input[type=date],input[type=time],input[type=number]{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
-input:focus{outline:2px solid var(--ac);outline-offset:0}
+input:focus,select:focus{outline:2px solid var(--ac);outline-offset:0}
+select{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+.nb{font-size:11px;color:var(--mu);white-space:nowrap;font-variant-numeric:tabular-nums}
 .chk{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px}
 .hint{font-size:12px;color:var(--mu)}
 .btn{padding:8px 13px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;font-size:13px;cursor:pointer}
@@ -59,7 +61,7 @@ ul#list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:7px}
 <label class="f">Yang menyerahkan / menerima<input type="text" id="py" value="Saripuddin"></label>
 <label class="f">Nomor telepon<input type="text" id="pt" value="081245882684"></label>
 <label class="f">Kepala SPPG<input type="text" id="kp" value="Ashad Ian Muhyi Ardiansyah Syam"></label></div>
-<label class="chk"><input type="checkbox" id="inc" checked> Nomor naik satu per sekolah</label>
+<label class="f" style="margin-top:12px">Penomoran surat<select id="nmode"><option value="same">Sama untuk semua sekolah (tidak berubah)</option><option value="seq">Berurut dari sekolah yang dipilih</option><option value="pos">Berurut sesuai posisi di daftar (nomor tetap per sekolah)</option></select></label>
 <div class="hint" id="nopv" style="margin-top:6px"></div></div>
 
 <div class="card"><h2 class="st"><b>3</b>Daftar sekolah <span class="pill" id="cnt"></span></h2>
@@ -83,17 +85,19 @@ const save2=()=>sv('ba_s',S);
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const getD=()=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec($('#tgl').value);return m?new Date(+m[1],m[2]-1,+m[3]):new Date()};
 $('#tgl').value=ymd(new Date());
-const CF=['jam','no','py','pt','kp'],cfg=ld('ba_cfg',{});CF.forEach(k=>{if(cfg[k]!=null)$('#'+k).value=cfg[k]});if(cfg.inc!=null)$('#inc').checked=cfg.inc;
+const CF=['jam','no','py','pt','kp','nmode'],cfg=ld('ba_cfg',{});CF.forEach(k=>{if(cfg[k]!=null)$('#'+k).value=cfg[k]});
 const nomor=(n,d)=>String(n).padStart(3,'0')+'/BAST/'+RM[d.getMonth()+1]+'/'+d.getFullYear();
+function nums(){const base=+$('#no').value||1,m=$('#nmode').value,out=[];let k=0;S.forEach((s,i)=>{if(!s.on)return;out.push(m=='same'?base:m=='seq'?base+k:base+i);k++});return out}
 function info(){const c=S.filter(s=>s.on).length,d=getD(),n=+$('#no').value||1;
  $('#cnt').textContent=c+' dipilih';$('#sum').textContent=c+' sekolah · '+(mode=='terima'?'Penerimaan':'Pengembalian');
  $('#wd').disabled=!c;
- $('#nopv').textContent=c?'Nomor: '+nomor(n,d)+(c>1&&$('#inc').checked?' s/d '+nomor(n+c-1,d):''):'Belum ada sekolah dipilih';
+ const nm=nums(),lis=$('#list').children;let k=0;S.forEach((s,i)=>{const el=lis[i]&&lis[i].querySelector('.nb');if(el)el.textContent=s.on?nomor(nm[k],d):'';if(s.on)k++});
+ $('#nopv').textContent=c?'Nomor surat: '+(nm[0]===nm[nm.length-1]?nomor(nm[0],d)+(c>1?' (sama untuk semua)':''):nomor(nm[0],d)+' s/d '+nomor(nm[nm.length-1],d)):'Belum ada sekolah dipilih';
  $('#sum2').textContent=HR[d.getDay()]+', '+d.getDate()+' '+BL[d.getMonth()]+' '+d.getFullYear();
- sv('ba_cfg',{jam:$('#jam').value,no:$('#no').value,py:$('#py').value,pt:$('#pt').value,kp:$('#kp').value,inc:$('#inc').checked})}
+ sv('ba_cfg',{jam:$('#jam').value,no:$('#no').value,py:$('#py').value,pt:$('#pt').value,kp:$('#kp').value,nmode:$('#nmode').value})}
 function draw(){
  $('#m1').classList.toggle('on',mode=='terima');$('#m2').classList.toggle('on',mode!='terima');
- $('#list').innerHTML=S.map((s,i)=>`<li draggable="true" data-i="${i}" class="${s.on?'':'off'}"><span class="gr" title="Seret untuk memindah">⠿</span><input type="checkbox" data-a="on" ${s.on?'checked':''}><span class="no">${i+1}</span><span class="nm">${esc(s.n)}</span><span class="ac"><button data-a="up" title="Naik">▲</button><button data-a="dn" title="Turun">▼</button><button data-a="del" title="Hapus">✕</button></span></li>`).join('');info()}
+ $('#list').innerHTML=S.map((s,i)=>`<li draggable="true" data-i="${i}" class="${s.on?'':'off'}"><span class="gr" title="Seret untuk memindah">⠿</span><input type="checkbox" data-a="on" ${s.on?'checked':''}><span class="no">${i+1}</span><span class="nm">${esc(s.n)}</span><span class="nb"></span><span class="ac"><button data-a="up" title="Naik">▲</button><button data-a="dn" title="Turun">▼</button><button data-a="del" title="Hapus">✕</button></span></li>`).join('');info()}
 const mv=(f,t)=>{if(t<0||t>=S.length||f===t)return;S.splice(t,0,S.splice(f,1)[0]);save2();draw()};
 const L=$('#list');
 L.addEventListener('click',e=>{const li=e.target.closest('li'),a=e.target.dataset.a;if(!li||!a)return;const i=+li.dataset.i;
@@ -103,7 +107,7 @@ L.addEventListener('dragstart',e=>{const li=e.target.closest('li');if(!li)return
 L.addEventListener('dragover',e=>{const li=e.target.closest('li');if(!li||drag<0)return;e.preventDefault();L.querySelectorAll('.ov').forEach(x=>x.classList.remove('ov'));li.classList.add('ov')});
 L.addEventListener('drop',e=>{const li=e.target.closest('li');if(!li||drag<0)return;e.preventDefault();mv(drag,+li.dataset.i);drag=-1});
 L.addEventListener('dragend',()=>{drag=-1;draw()});
-['tgl','jam','no','py','pt','kp','inc'].forEach(id=>$('#'+id).addEventListener('input',info));
+['tgl','jam','no','py','pt','kp','nmode'].forEach(id=>$('#'+id).addEventListener('input',info));
 $('#m1').onclick=()=>{mode='terima';sv('ba_mode',mode);draw()};$('#m2').onclick=()=>{mode='kembali';sv('ba_mode',mode);draw()};
 $('#all').onclick=()=>{S.forEach(s=>s.on=true);save2();draw()};$('#none').onclick=()=>{S.forEach(s=>s.on=false);save2();draw()};
 $('#az').onclick=()=>{S.sort((a,b)=>a.n.localeCompare(b.n,'id'));save2();draw()};
@@ -129,7 +133,7 @@ async function makeDocx(JSZ,tpl,L,o){
  else pb='<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/><w:rPr><w:sz w:val="2"/></w:rPr></w:pPr><w:r><w:rPr><w:sz w:val="2"/></w:rPr><w:br w:type="page"/></w:r></w:p>';
  const d=o.date,pad=n=>String(n).padStart(2,'0');let n=o.no,did=1,vid=1025,body='';
  L.forEach((s,i)=>{
-  const no=String(n).padStart(3,'0')+'/BAST/'+RM[d.getMonth()+1]+'/'+d.getFullYear();if(o.inc)n++;
+  const no=String(o.nums[i]).padStart(3,'0')+'/BAST/'+RM[d.getMonth()+1]+'/'+d.getFullYear();
   const v={NO:no,HARI:HR[d.getDay()],DD:pad(d.getDate()),BLN:BL[d.getMonth()],YYYY:d.getFullYear(),JAM:o.jam?o.jam.replace(':',' : '):'___ : ___',
    PAKET:s.q!==''&&s.q!=null?s.q:'____',A:s.a,B:s.b,C:s.c,PENYERAH:o.py,TELP:o.pt,KEPALA:o.kp,NAMA:s.nm,JABATAN:s.jb,TELPS:s.tl,SEKOLAH:s.n};
   let c=chunk.replace(/\{\{(\w+)\}\}/g,(m,k)=>esc(v[k]==null?'':v[k]));
@@ -143,7 +147,7 @@ async function makeDocx(JSZ,tpl,L,o){
 $('#wd').onclick=async()=>{
  const L=S.filter(s=>s.on);if(!L.length){alert('Pilih minimal satu sekolah.');return}
  if(typeof JSZip=='undefined'){alert('Pustaka Word gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');return}
- try{const blob=await makeDocx(JSZip,TPL[mode],L,{date:getD(),no:+$('#no').value||1,inc:$('#inc').checked,jam:$('#jam').value,py:$('#py').value,pt:$('#pt').value,kp:$('#kp').value});
+ try{const blob=await makeDocx(JSZip,TPL[mode],L,{date:getD(),nums:nums(),jam:$('#jam').value,py:$('#py').value,pt:$('#pt').value,kp:$('#kp').value});
  await save(blob,(mode=='terima'?'Berita_Acara_Penerimaan_':'Berita_Acara_Pengembalian_')+ymd(getD())+'.docx')}catch(e){alert('Gagal membuat file Word: '+(e&&e.message||e))}};
 draw();
 </script></body></html>
